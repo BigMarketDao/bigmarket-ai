@@ -1,4 +1,4 @@
-# svbigmarket.ai
+# bigmarket.ai
 
 Python server manages prompts and tools and communicates with LLM layer.
 
