@@ -57,6 +57,7 @@ def get_llm_response(prompt):
 
 def get_ai_resolution(market_title, description, resolution_criteria, outcome_categories, evidence):
     """Uses an LLM (OpenAI or DeepSeek) to determine the correct market outcome."""
+    
     prompt = f"""
     You are an AI resolving a prediction market.
 
@@ -66,15 +67,25 @@ def get_ai_resolution(market_title, description, resolution_criteria, outcome_ca
     Outcomes: {', '.join(outcome_categories)}
     Evidence: {evidence}
 
-    Which outcome best matches the resolution criteria? Respond with the **index number** of the most suitable outcome.
+    Your response should be a **single integer**, representing the index of the most suitable outcome from the given list.
+    **Only respond with a number** (0, 1, 2, etc.) and nothing else.
     """
 
-    print("🔍 Sent Prompt to DeepSeek:\n", prompt)  # 🛠 Debugging the prompt
+    print("🔍 Sent Prompt to AI:\n", prompt)  # Debugging the prompt
 
     ai_response = get_llm_response(prompt)
-    try:
-        outcome_index = int(ai_response)
-    except ValueError:
-        outcome_index = -1  # If the AI response is invalid, return -1
 
-    return prompt, ai_response, outcome_index, "deepseek-chat"
+    # Debugging: Print LLM Response
+    print(f"🔍 AI Response: {ai_response}")
+
+    # Ensure response is a number
+    try:
+        outcome_index = int(ai_response.strip())  # Strip and convert response to integer
+    except ValueError:
+        print(f"❌ Invalid AI response format: {ai_response}")
+        outcome_index = -1  # Default error case
+
+    model = os.getenv("LLM_PROVIDER", "unknown")  # Capture which LLM was used
+
+    print(f"✅ Returning from get_ai_resolution: {prompt}, {ai_response}, {outcome_index}, {model}")
+    return prompt, ai_response, outcome_index, model
