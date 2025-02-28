@@ -16,3 +16,13 @@ python server.py
 python --version
 Python 3.12.9
 ```
+
+## Service management
+
+```bash
+sudo vi /etc/systemd/system/bigmarket-ai.service
+sudo systemctl daemon-reload
+sudo systemctl restart bigmarket-ai
+sudo systemctl status bigmarket-ai
+journalctl -u bigmarket-ai --no-pager --lines=50 | tail -n 20
+```
